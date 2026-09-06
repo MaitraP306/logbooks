@@ -732,3 +732,15 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .report-summary-table { min-width: 0; }
 .report-summary-table th, .report-summary-table td { vertical-align: top; }
 @media (max-width: 680px) { .report-summary-content { padding: 14px 18px 20px; } .summary-record { padding: 12px; } .report-modal-wide { max-height: calc(100vh - 24px); } }
+
+
+/* Temperature exception workflow: out-of-range values are allowed, but must be documented. */
+.temperature-row-out-of-range { background: #fff5f5; border-left: 4px solid #dc2626; }
+.temperature-row-out-of-range:hover { background: #fff1f1; }
+.temperature-row-out-of-range .temperature-name strong,
+.temperature-row-out-of-range .temperature-range { color: #991b1b; }
+.corrective-action-wrap { display: grid; gap: 5px; margin-top: 9px; }
+.corrective-action-label { font-size: 11px; font-weight: 800; color: #991b1b; }
+.corrective-action-label span { color: #dc2626; }
+.temperature-row-out-of-range .corrective-action-input { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.08); }
+.admin-reading-row-out-of-range { background: #fff5f5; border: 1px solid #fecaca; }

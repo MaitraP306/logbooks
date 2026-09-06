@@ -210,6 +210,7 @@ function TaskPage() {
           .select('*')
           .eq('store_id', id)
           .eq('task_type_id', taskResult.data.id)
+          .eq('log_date', getLocalDate())
           .order('log_date', {
             ascending: false
           })
@@ -521,9 +522,18 @@ function TaskPage() {
         return
       }
       if (!missing) {
-        const validationError = validateTemperatureValue(rawValue, rule, item.name)
+        // Operating-range violations are valid submissions; they require corrective action.
+        // Only schema constraints (numeric/integer/decimal precision) block the entry.
+        const schemaRule = { ...rule, enforceRange: false }
+        const validationError = validateTemperatureValue(rawValue, schemaRule, item.name)
         if (validationError) {
           setError(validationError)
+          return
+        }
+        const temperature = Number(rawValue)
+        const acceptable = temperature >= Number(item.min_temp) && temperature <= Number(item.max_temp)
+        if (!acceptable && !(correctiveActions[item.name] || '').trim()) {
+          setError(`Please document corrective action for ${item.name} because the temperature is outside the operating range.`)
           return
         }
       }

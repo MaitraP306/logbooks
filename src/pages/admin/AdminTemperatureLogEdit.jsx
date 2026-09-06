@@ -220,9 +220,15 @@ function AdminTemperatureLogEdit() {
         return
       }
       if (rawValue !== undefined && rawValue !== null && rawValue !== '') {
-        const validationError = validateTemperatureValue(rawValue, rule, item.name)
+        const validationError = validateTemperatureValue(rawValue, { ...rule, enforceRange: false }, item.name)
         if (validationError) {
           setError(validationError)
+          return
+        }
+        const temperature = Number(rawValue)
+        const acceptable = temperature >= Number(item.min_temp) && temperature <= Number(item.max_temp)
+        if (!acceptable && !(reading?.corrective_action || '').trim()) {
+          setError(`Please document corrective action for ${item.name} because the temperature is outside the operating range.`)
           return
         }
       }
@@ -438,7 +444,7 @@ function AdminTemperatureLogEdit() {
             return (
 
               <div
-                className="admin-reading-row"
+                className={`admin-reading-row ${!acceptable ? 'admin-reading-row-out-of-range' : ''}`}
                 key={reading.id}
               >
 
@@ -462,8 +468,6 @@ function AdminTemperatureLogEdit() {
 
                 <input
                   type="number"
-                  min={rule.enforceRange && rule.minValue !== '' ? rule.minValue : undefined}
-                  max={rule.enforceRange && rule.maxValue !== '' ? rule.maxValue : undefined}
                   step={rule.fieldType === 'integer' ? '1' : 10 ** -Number(rule.decimalPlaces ?? 1)}
                   value={
                     reading.temperature
