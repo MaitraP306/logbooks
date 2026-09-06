@@ -12,6 +12,23 @@ function AdminTemperatureLogEdit() {
   const location = useLocation()
   const isNewLog = logId === 'new'
 
+  function isUuid(value) {
+    return typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+  }
+
+  function getNewLogParams() {
+    const params = new URLSearchParams(location.search)
+    const storeId = params.get('storeId')?.trim() || ''
+    const taskTypeId = params.get('taskTypeId')?.trim() || ''
+    const requestedDate = params.get('date')?.trim() || ''
+
+    if (!isUuid(storeId) || !isUuid(taskTypeId) || !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) {
+      return null
+    }
+
+    return { storeId, taskTypeId, requestedDate }
+  }
+
   const [store, setStore] =
     useState(null)
 
@@ -55,16 +72,15 @@ function AdminTemperatureLogEdit() {
     setError('')
 
     if (isNewLog) {
-      const params = new URLSearchParams(location.search)
-      const storeId = params.get('storeId')
-      const taskTypeId = params.get('taskTypeId')
-      const requestedDate = params.get('date') || ''
+      const newLogParams = getNewLogParams()
 
-      if (!storeId || !taskTypeId || !requestedDate) {
-        setError('The missing temperature log is missing its store, period, or date.')
+      if (!newLogParams) {
+        setError('This temperature log cannot be opened because its store, temperature period, or date is missing or invalid. Return to Edit Temperature Logs and click Enter Log again.')
         setLoading(false)
         return
       }
+
+      const { storeId, taskTypeId, requestedDate } = newLogParams
 
       const [storeResult, taskResult, itemsResult, rulesResult] = await Promise.all([
         supabase.from('stores').select('*').eq('id', storeId).maybeSingle(),
@@ -289,9 +305,17 @@ function AdminTemperatureLogEdit() {
     setSaving(true)
 
     if (isNewLog) {
-      const params = new URLSearchParams(location.search)
-      const storeId = params.get('storeId')
-      const taskTypeId = params.get('taskTypeId')
+      // Use the IDs returned by Supabase after loading the selected records.
+      // This prevents an invalid/undefined query-string value from ever reaching
+      // a UUID-typed RPC argument.
+      const storeId = store?.id
+      const taskTypeId = task?.id
+
+      if (!isUuid(storeId) || !isUuid(taskTypeId)) {
+        setError('This temperature log cannot be saved because the selected store or temperature period is invalid. Return to Edit Temperature Logs and click Enter Log again.')
+        setSaving(false)
+        return
+      }
 
       const { data: newLogId, error: submitError } = await supabase.rpc(
         'submit_temperature_log',
@@ -308,6 +332,8 @@ function AdminTemperatureLogEdit() {
       if (submitError) {
         if (submitError.code === '23505') {
           setError('A temperature log already exists for this store, period, and date. Refresh the list and edit the existing log instead.')
+        } else if (submitError.code === '22P02') {
+          setError('The temperature log could not be saved because the selected store or temperature period is invalid. No data was written. Return to Edit Temperature Logs and try Enter Log again.')
         } else if (submitError.code === '23514') {
           setError((submitError.message || 'The temperature log could not be saved.').replace(/^.*?ERROR:\s*/i, '').trim())
         } else {
