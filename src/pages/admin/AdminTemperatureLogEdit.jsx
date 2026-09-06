@@ -10,7 +10,7 @@ function AdminTemperatureLogEdit() {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const isNewLog = logId === 'new' || logId === 'undefined'
+  const isNewLog = !logId || logId === 'new' || logId === 'undefined' || logId === 'null'
 
   const [store, setStore] =
     useState(null)
@@ -64,7 +64,7 @@ function AdminTemperatureLogEdit() {
     loadLog()
     // loadLog is intentionally keyed by the log route id.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logId])
+  }, [logId, location.search])
 
 
   async function loadLog() {
