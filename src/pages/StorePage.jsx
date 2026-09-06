@@ -12,6 +12,7 @@ function StorePage() {
   const [store, setStore] = useState(null)
   const [tasks, setTasks] = useState([])
   const [completionSet, setCompletionSet] = useState(new Set())
+  const [selectedDate, setSelectedDate] = useState(getLocalDate())
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -21,7 +22,7 @@ function StorePage() {
     loadStore()
     // loadStore is intentionally defined in the component and keyed by the route id.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, selectedDate])
 
 
   async function loadStore() {
@@ -62,7 +63,7 @@ function StorePage() {
     setTasks(taskResult.data || [])
 
 
-    const today = getLocalDate()
+    const selected = selectedDate
 
     const [
       tempResult,
@@ -74,19 +75,19 @@ function StorePage() {
         .from('temperature_logs')
         .select('task_type_id')
         .eq('store_id', id)
-        .eq('log_date', today),
+        .eq('log_date', selected),
 
       supabase
         .from('checklist_submissions')
         .select('task_type_id')
         .eq('store_id', id)
-        .eq('log_date', today),
+        .eq('log_date', selected),
 
       supabase
         .from('task_completions')
         .select('task_type_id')
         .eq('store_id', id)
-        .eq('completion_date', today)
+        .eq('completion_date', selected)
 
     ])
 
@@ -150,7 +151,7 @@ function StorePage() {
       `/store/${id}/` +
       `${task.task_type}/` +
       `${task.time_period}/` +
-      `${mode}`
+      `${mode}?date=${encodeURIComponent(selectedDate)}`
     )
   }
 
@@ -201,24 +202,22 @@ function StorePage() {
           </h1>
 
           <p className="subtitle">
-            Today's Tasks
+            Tasks
           </p>
 
         </div>
 
 
         <div className="date-box">
-
-          {new Date().toLocaleDateString(
-            'en-CA',
-            {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }
-          )}
-
+          <label htmlFor="store-log-date">Log date</label>
+          <input
+            id="store-log-date"
+            type="date"
+            value={selectedDate}
+            max={getLocalDate()}
+            onChange={event => setSelectedDate(event.target.value)}
+          />
+          <span>Tasks and completion status for the selected date</span>
         </div>
 
       </div>

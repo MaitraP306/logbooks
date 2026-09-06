@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import TemperatureRow from '../components/TemperatureRow'
 import { supabase } from '../lib/supabase'
@@ -17,6 +17,8 @@ function TaskPage() {
   } = useParams()
 
   const navigate = useNavigate()
+  const location = useLocation()
+  const requestedDate = new URLSearchParams(location.search).get('date') || getLocalDate()
 
 
   const [store, setStore] = useState(null)
@@ -52,7 +54,7 @@ function TaskPage() {
     useState('')
 
   const [logDate, setLogDate] =
-    useState(getLocalDate())
+    useState(requestedDate)
 
   const [loading, setLoading] =
     useState(true)
@@ -77,7 +79,8 @@ function TaskPage() {
     id,
     taskType,
     timePeriod,
-    mode
+    mode,
+    requestedDate
   ])
 
 
@@ -183,7 +186,7 @@ function TaskPage() {
 
       if (mode === 'complete') {
 
-        setLogDate(getLocalDate())
+        setLogDate(requestedDate)
         setEmployeeName('')
         setTemperatures({})
         setCorrectiveActions({})
@@ -210,7 +213,7 @@ function TaskPage() {
           .select('*')
           .eq('store_id', id)
           .eq('task_type_id', taskResult.data.id)
-          .eq('log_date', getLocalDate())
+          .eq('log_date', requestedDate)
           .order('log_date', {
             ascending: false
           })
@@ -330,7 +333,7 @@ function TaskPage() {
 
     if (mode === 'complete') {
 
-      setLogDate(getLocalDate())
+      setLogDate(requestedDate)
       setEmployeeName('')
       setChecklistAnswers({})
       setNotes('')
@@ -350,6 +353,7 @@ function TaskPage() {
         .select('*')
         .eq('store_id', id)
         .eq('task_type_id', taskResult.data.id)
+        .eq('log_date', requestedDate)
         .order('log_date', {
           ascending: false
         })

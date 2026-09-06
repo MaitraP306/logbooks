@@ -749,3 +749,31 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .corrective-action-label span { color: #dc2626; }
 .temperature-row-out-of-range .corrective-action-input { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.08); }
 .admin-reading-row-out-of-range { background: #fff5f5; border: 1px solid #fecaca; }
+
+/* Store-level temperature configuration */
+.date-box { display: grid; gap: 5px; min-width: 220px; }
+.date-box label { color: var(--slate-500); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+.date-box input { min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--navy-900); font-weight: 700; }
+.date-box span { color: var(--slate-500); font-size: 10px; font-weight: 600; white-space: normal; }
+.store-select-button { display: grid; gap: 3px; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.selected-store-row { border-color: #99d5d0; box-shadow: 0 0 0 2px rgba(13,148,136,.08); }
+.temperature-item-form { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; padding: 16px; margin-bottom: 16px; border: 1px dashed var(--slate-300); border-radius: 10px; background: var(--slate-50); }
+.temperature-item-form .form-section { margin: 0; padding: 0; border: 0; box-shadow: none; background: transparent; }
+.temperature-required-toggle { align-self: end; }
+.temperature-item-form-actions { display: flex; align-items: end; justify-content: flex-end; }
+.temperature-config-list { display: grid; gap: 8px; }
+.temperature-config-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 15px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+.temperature-config-row.inactive { opacity: .6; }
+.temperature-config-main { display: grid; gap: 3px; min-width: 0; }
+.temperature-config-main strong { color: var(--navy-900); }
+.temperature-config-main span { color: var(--slate-500); font-size: 11px; }
+.inactive-temperature-items { margin-top: 12px; color: var(--slate-500); font-size: 12px; }
+.inactive-temperature-items summary { cursor: pointer; font-weight: 700; }
+.inactive-temperature-items .temperature-config-row { margin-top: 8px; }
+@media (max-width: 680px) {
+  .temperature-item-form { grid-template-columns: 1fr; }
+  .temperature-item-form-actions { justify-content: stretch; }
+  .temperature-item-form-actions .submit-button { width: 100%; }
+  .temperature-config-row { align-items: flex-start; flex-direction: column; }
+  .date-box { width: 100%; min-width: 0; }
+}
