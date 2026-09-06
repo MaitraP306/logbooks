@@ -14,7 +14,7 @@ import CompletionReports from './pages/reports/CompletionReports'
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/logbooks">
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
