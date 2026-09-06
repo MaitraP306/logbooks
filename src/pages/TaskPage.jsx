@@ -723,31 +723,6 @@ function TaskPage() {
     }
 
 
-    const {
-      data: log,
-      error: logError
-    } = await supabase
-      .from('temperature_logs')
-      .insert({
-        store_id: id,
-        task_type_id: taskResult.id,
-        log_date: logDate,
-        submitted_by_name:
-          employeeName.trim(),
-        notes:
-          notes.trim() || null
-      })
-      .select()
-      .single()
-
-
-    if (logError) {
-      setError(logError.message)
-      setSaving(false)
-      return
-    }
-
-
     const readings =
       items
         .filter(item =>
@@ -755,56 +730,58 @@ function TaskPage() {
           temperatures[item.id] !== ''
         )
         .map(item => {
-
-          const temperature =
-            Number(
-              temperatures[item.id]
-            )
-
-          const minTemp =
-            Number(item.min_temp)
-
-          const maxTemp =
-            Number(item.max_temp)
+          const temperature = Number(temperatures[item.id])
+          const minTemp = Number(item.min_temp)
+          const maxTemp = Number(item.max_temp)
 
           return {
-            temperature_log_id: log.id,
             item_name: item.name,
             temperature,
             unit:
-              item.unit === '°F' ||
-              item.unit === 'F'
+              item.unit === '°F' || item.unit === 'F'
                 ? 'F'
                 : 'C',
             min_temp_at_time: minTemp,
             max_temp_at_time: maxTemp,
-            acceptable:
-              temperature >= minTemp &&
-              temperature <= maxTemp,
-            corrective_action:
-              correctiveActions[item.name] ||
-              null,
+            acceptable: temperature >= minTemp && temperature <= maxTemp,
+            corrective_action: correctiveActions[item.name]?.trim() || null,
             notes: null
           }
         })
 
-
-    if (readings.length > 0) {
-
-      const {
-        error: readingsError
-      } = await supabase
-        .from('temperature_readings')
-        .insert(readings)
-
-
-      if (readingsError) {
-        setError(readingsError.message)
-        setSaving(false)
-        return
+    // New temperature logs are submitted through one database transaction.
+    // If the log or any reading fails, PostgreSQL rolls the entire operation back,
+    // so we never leave an empty/partial temperature log behind.
+    const { data: logId, error: submitError } = await supabase.rpc(
+      'submit_temperature_log',
+      {
+        p_store_id: id,
+        p_task_type_id: taskResult.id,
+        p_log_date: logDate,
+        p_submitted_by_name: employeeName.trim(),
+        p_notes: notes.trim() || null,
+        p_readings: readings
       }
+    )
+
+    if (submitError) {
+      const message = submitError.message || 'Unable to save the temperature log.'
+      if (submitError.code === '23514') {
+        setError(message.replace(/^.*?ERROR:\s*/i, '').trim())
+      } else if (submitError.code === '23505') {
+        setError('A temperature log already exists for this store, task, and date.')
+      } else {
+        setError(message)
+      }
+      setSaving(false)
+      return
     }
 
+    if (!logId) {
+      setError('The temperature log could not be saved. No data was written.')
+      setSaving(false)
+      return
+    }
 
     setSaved(true)
     setSaving(false)
