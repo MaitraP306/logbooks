@@ -244,6 +244,8 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .answer-buttons { display: flex; gap: 8px; margin-top: 12px; }
 .answer-buttons button { min-height: 38px; padding: 0 14px; border: 1px solid var(--border); border-radius: 8px; background: white; color: var(--slate-600); font-weight: 750; }
 .answer-buttons button:hover { border-color: var(--brand-600); color: var(--brand-700); }
+.answer-buttons button.selected { border-color: var(--brand-600); background: var(--brand-50); color: var(--brand-700); box-shadow: 0 0 0 2px rgba(13, 148, 136, .12); }
+.answer-buttons button.selected:hover { background: var(--brand-50); color: var(--brand-700); }
 .checklist-answer-notes { margin-top: 10px; }
 
 /* Admin */
@@ -270,6 +272,9 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .admin-add-form, .question-add-form { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; padding: 16px; margin-bottom: 15px; border: 1px dashed var(--slate-300); border-radius: 10px; background: var(--slate-50); }
 .admin-edit-card { padding: 18px; }
 .admin-log-list { display: grid; gap: 10px; }
+.admin-log-card-missing { border: 1px dashed #f59e0b; background: #fffbeb; }
+.admin-log-card-missing .missing-status { color: #b45309; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.admin-log-card-missing .action-button { white-space: nowrap; }
 .admin-log-card { padding: 16px; }
 .admin-reading-list { display: grid; gap: 7px; margin-top: 12px; }
 .admin-reading-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 9px 11px; border-radius: 7px; background: var(--slate-50); font-size: 12px; }

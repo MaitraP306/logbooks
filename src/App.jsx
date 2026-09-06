@@ -23,6 +23,7 @@ function App() {
             <Route path="/reports" element={<CompletionReports />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+            <Route path="/admin/temperature/new" element={<ProtectedRoute><AdminTemperatureLogEdit /></ProtectedRoute>} />
             <Route path="/admin/temperature/:logId" element={<ProtectedRoute><AdminTemperatureLogEdit /></ProtectedRoute>} />
           </Routes>
         </Layout>
