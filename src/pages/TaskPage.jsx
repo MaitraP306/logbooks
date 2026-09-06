@@ -524,6 +524,9 @@ function TaskPage() {
       if (!missing) {
         // Operating-range violations are valid submissions; they require corrective action.
         // Only schema constraints (numeric/integer/decimal precision) block the entry.
+        // The operating range is an alert threshold. It must never prevent
+        // an employee from recording an actual reading. Schema checks such as
+        // numeric type and decimal precision still apply.
         const schemaRule = { ...rule, enforceRange: false }
         const validationError = validateTemperatureValue(rawValue, schemaRule, item.name)
         if (validationError) {

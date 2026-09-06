@@ -30,7 +30,7 @@ function TemperatureRow({
       <div className="temperature-range">
         Operating range: {item.min_temp} – {item.max_temp} {item.unit}
         {rule.enforceRange && rule.minValue !== '' && rule.maxValue !== '' && (
-          <small>Configured entry limit: {rule.minValue} – {rule.maxValue}</small>
+          <small>Input validation range: {rule.minValue} – {rule.maxValue}</small>
         )}
       </div>
 

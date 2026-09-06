@@ -69,7 +69,7 @@ export function defaultTemperatureRule(item) {
     fieldLabel: item.name,
     fieldType: 'number',
     required: item.required !== false,
-    enforceRange: true,
+    enforceRange: false,
     minValue: Number(item.min_temp ?? -40),
     maxValue: Number(item.max_temp ?? 250),
     decimalPlaces: 1,
@@ -109,9 +109,10 @@ export function validateTemperatureValue(rawValue, rule, label) {
 
     if (rule.decimalPlaces !== '' && rule.decimalPlaces !== undefined) {
       const text = String(rawValue).trim()
-      const decimals = text.includes('.') ? text.split('.')[1].length : 0
+      const fraction = text.includes('.') ? text.split('.')[1].replace(/0+$/, '') : ''
+      const decimals = fraction.length
       if (decimals > Number(rule.decimalPlaces)) {
-        return `${label} allows at most ${rule.decimalPlaces} decimal place(s).`
+        return `${label} allows at most ${rule.decimalPlaces} decimal place(s). Enter a value such as 4 or 4.5.`
       }
     }
 
