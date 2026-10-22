@@ -83,7 +83,7 @@ function Home() {
               <span className="store-icon" aria-hidden="true">
                 <img
                   className="store-brand-logo"
-                  src="/logbooks/firehouse-subs-logo.svg"
+                  src="/firehouse-subs-logo.svg"
                   alt=""
                   loading="eager"
                 />
