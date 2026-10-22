@@ -131,7 +131,6 @@ h3 { font-size: 17px; }
 .admin-edit-card,
 .builder,
 .form-section,
-.temperature-form,
 .success-box,
 .error-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
 .error { margin-top: 24px; color: var(--danger); }
@@ -218,11 +217,41 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .submit-button { min-height: 46px; padding: 0 20px; }
 .required-star { color: var(--danger); }
 
-/* Temperature */
-.temperature-form { overflow: hidden; }
-.temperature-header { padding: 20px 22px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, #fff, #fbfdfd); }
+/* Temperature and checklist forms share the same page-level card rhythm.
+   Keep metadata fields as individual cards, just like the checklist form. */
+.temperature-form {
+  display: grid;
+  gap: 12px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.temperature-header {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.3fr) minmax(130px, 150px) minmax(230px, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #fff, #fbfdfd);
+  color: var(--slate-500);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+.temperature-header > div { min-width: 0; overflow-wrap: anywhere; }
 .temperature-section-title { margin: 24px 0 10px; padding: 0 22px; color: var(--slate-500); font-size: 11px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
-.temperature-table { width: 100%; }
+.temperature-table {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
 .temperature-row { display: grid; grid-template-columns: minmax(220px, 1.3fr) 150px minmax(230px, 1fr); gap: 16px; align-items: center; padding: 15px 22px; border-top: 1px solid var(--slate-100); }
 .temperature-row:hover { background: #fcfefe; }
 .temperature-name { color: var(--navy-900); font-size: 13px; font-weight: 750; }
@@ -328,7 +357,9 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 @media (max-width: 900px) {
   .topbar-inner, .content { width: min(100% - 28px, 1400px); }
   .task-table-header, .task-row { grid-template-columns: minmax(180px,1fr) 120px 130px; }
-  .temperature-row { grid-template-columns: 1fr 130px; }
+  .temperature-header { grid-template-columns: minmax(0, 1fr) 130px; gap: 12px; padding: 14px 16px; }
+  .temperature-header > :last-child { display: none; }
+  .temperature-row { grid-template-columns: minmax(0, 1fr) 130px; gap: 12px; padding: 15px 16px; }
   .temperature-row > :last-child { grid-column: 1 / -1; }
   .builder-layout { grid-template-columns: 220px minmax(0,1fr); }
 }
@@ -799,103 +830,96 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 @media (max-width: 640px) { .admin-log-card { align-items: flex-start; flex-direction: column; } .admin-log-card > div { align-items: flex-start; flex-direction: column; gap: 6px; } .builder-task { padding: 10px; } }
 
 
-/* Firehouse Subs store branding */
-.store-card {
-  grid-template-columns: 96px minmax(0, 1fr) auto;
-  gap: 16px;
+/* UI polish: align the Checklist Builder heading with other admin sections. */
+.builder-toolbar {
+  padding: 22px 22px 0;
+  margin-bottom: 18px;
 }
-.store-icon {
-  width: 96px;
-  height: 48px;
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  background: #fff;
+.builder-toolbar > div:first-child {
+  min-width: 0;
 }
-.store-brand-logo {
+.builder-toolbar .eyebrow {
   display: block;
-  width: 100%;
-  max-height: 44px;
-  object-fit: contain;
+  margin: 0 0 8px;
+  line-height: 1.4;
 }
-.loading-icon { width: 96px; }
-
-/* Make manager checklist forms feel consistent with temperature-log forms. */
-.checklist-form {
-  display: grid;
-  gap: 18px;
+.builder-toolbar h3 {
+  margin: 0 0 8px;
+  line-height: 1.3;
 }
-.checklist-form > .form-section {
+.builder-toolbar p {
   margin: 0;
-  padding: 20px;
+  line-height: 1.5;
 }
-.checklist-card {
-  display: grid;
-  gap: 12px;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+.builder-toolbar > .submit-button {
+  flex-shrink: 0;
 }
-.checklist-question {
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  gap: 12px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
+
+/* Temperature rows: separate item name, required status, operating range and input. */
+.temperature-row {
+  column-gap: 20px;
+  row-gap: 10px;
 }
-.question-number {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--brand-50);
-  color: var(--brand-700);
-  font-size: 12px;
-}
-.question-title {
+.temperature-name {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 5px;
-  margin: 2px 0 8px;
+  column-gap: 10px;
+  row-gap: 5px;
+  min-width: 0;
   line-height: 1.45;
 }
-.question-title .required-star {
+.temperature-name strong {
+  overflow-wrap: anywhere;
+}
+.required-label,
+.optional-label {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 20px;
-  padding: 1px 7px;
+  width: fit-content;
+  padding: 3px 8px;
   border-radius: 999px;
-  background: var(--danger-bg);
-  color: var(--danger);
   font-size: 10px;
   font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: .025em;
+  white-space: nowrap;
 }
-.question-title .required-star::before { content: "Required"; }
-.question-title .required-star { font-size: 0; }
-.question-title .required-star::before { font-size: 10px; }
-.question-description { margin: 0 0 8px; line-height: 1.5; }
-.checklist-question .question-body textarea {
+.required-label {
+  color: #9f1239;
+  background: #fff1f2;
+}
+.optional-label {
+  color: var(--slate-600);
+  background: var(--slate-100);
+}
+.temperature-range {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.temperature-range small {
   display: block;
-  margin-top: 12px;
-  min-height: 76px;
+  margin-top: 5px;
+  line-height: 1.45;
 }
-.checklist-form > .submit-button { justify-self: start; min-width: 190px; }
-
-@media (max-width: 680px) {
-  .store-card { grid-template-columns: 84px minmax(0, 1fr) auto; gap: 12px; padding: 16px; }
-  .store-icon { width: 84px; height: 44px; }
-  .checklist-question { grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 15px; }
-  .checklist-form > .form-section { padding: 16px; }
-  .checklist-form > .submit-button { width: 100%; }
+.temperature-input {
+  width: 100%;
+  min-width: 0;
+  max-width: 180px;
+}
+.temperature-input input {
+  width: 100%;
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  .builder-toolbar {
+    padding: 20px 16px 0;
+    align-items: flex-start;
+  }
+  .temperature-row {
+    row-gap: 8px;
+  }
+  .temperature-input {
+    max-width: none;
+  }
 }

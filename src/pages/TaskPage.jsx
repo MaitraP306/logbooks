@@ -1793,7 +1793,7 @@ function TaskPage() {
           <div className="form-section">
 
             <label>
-              Date
+              Log Date
             </label>
 
             <input
@@ -1823,7 +1823,7 @@ function TaskPage() {
                   e.target.value
                 )
               }
-              placeholder="Enter your name"
+              placeholder="Enter name"
             />
 
           </div>
