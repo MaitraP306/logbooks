@@ -80,8 +80,13 @@ function Home() {
               className="store-card"
             >
 
-              <span className="store-icon">
-                🏪
+              <span className="store-icon" aria-hidden="true">
+                <img
+                  className="store-brand-logo"
+                  src="/logbooks/firehouse-subs-logo.svg"
+                  alt=""
+                  loading="eager"
+                />
               </span>
 
               <span>

@@ -311,6 +311,7 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
 .report-table { width: 100%; min-width: 650px; border-collapse: collapse; }
 .report-table th { padding: 11px 13px; background: var(--slate-50); color: var(--slate-500); font-size: 10px; text-align: left; text-transform: uppercase; letter-spacing: .07em; }
 .report-table td { padding: 12px 13px; border-top: 1px solid var(--slate-100); color: var(--slate-700); font-size: 12px; }
+.report-store-name { display: block; margin-top: 4px; color: var(--slate-500); font-size: 11px; line-height: 1.4; }
 .report-table tr:hover td { background: #fcfdfd; }
 .report-legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; color: var(--slate-500); font-size: 12px; }
 .legend-complete::before, .legend-missing::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; }
@@ -776,4 +777,125 @@ input[type="checkbox"] { width: 17px; min-height: 17px; accent-color: var(--bran
   .temperature-item-form-actions .submit-button { width: 100%; }
   .temperature-config-row { align-items: flex-start; flex-direction: column; }
   .date-box { width: 100%; min-width: 0; }
+}
+
+
+/* Admin temperature log list: readable metadata and consistent status hierarchy */
+.admin-log-card { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.admin-log-card > div { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; column-gap: 10px; row-gap: 7px; }
+.admin-log-card > div > strong { color: var(--navy-900); }
+.admin-log-card > div > span { color: var(--slate-600); }
+.admin-log-card .missing-status { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 999px; background: #fef3c7; line-height: 1.2; }
+
+/* Checklist selector buttons use the current builder-task class names. */
+.builder-sidebar { min-width: 0; }
+.builder-sidebar-heading { gap: 10px; }
+.builder-task { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 12px; margin: 0 0 7px; border: 1px solid var(--border); border-radius: 10px; background: #fff; color: var(--slate-700); text-align: left; cursor: pointer; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
+.builder-task:hover { border-color: #9bd4ce; background: #fbfefe; }
+.builder-task.active { border-color: #83c8c1; background: var(--brand-50); box-shadow: 0 0 0 2px rgba(13, 126, 117, .08); color: var(--navy-900); }
+.builder-task-name { font-size: 12px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+.builder-task-meta { color: var(--slate-500); font-size: 10px; font-weight: 700; }
+.builder-task.active .builder-task-meta { color: var(--brand-700); }
+@media (max-width: 640px) { .admin-log-card { align-items: flex-start; flex-direction: column; } .admin-log-card > div { align-items: flex-start; flex-direction: column; gap: 6px; } .builder-task { padding: 10px; } }
+
+
+/* Firehouse Subs store branding */
+.store-card {
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 16px;
+}
+.store-icon {
+  width: 96px;
+  height: 48px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+}
+.store-brand-logo {
+  display: block;
+  width: 100%;
+  max-height: 44px;
+  object-fit: contain;
+}
+.loading-icon { width: 96px; }
+
+/* Make manager checklist forms feel consistent with temperature-log forms. */
+.checklist-form {
+  display: grid;
+  gap: 18px;
+}
+.checklist-form > .form-section {
+  margin: 0;
+  padding: 20px;
+}
+.checklist-card {
+  display: grid;
+  gap: 12px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.checklist-question {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+.question-number {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--brand-50);
+  color: var(--brand-700);
+  font-size: 12px;
+}
+.question-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 2px 0 8px;
+  line-height: 1.45;
+}
+.question-title .required-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 10px;
+  font-weight: 800;
+}
+.question-title .required-star::before { content: "Required"; }
+.question-title .required-star { font-size: 0; }
+.question-title .required-star::before { font-size: 10px; }
+.question-description { margin: 0 0 8px; line-height: 1.5; }
+.checklist-question .question-body textarea {
+  display: block;
+  margin-top: 12px;
+  min-height: 76px;
+}
+.checklist-form > .submit-button { justify-self: start; min-width: 190px; }
+
+@media (max-width: 680px) {
+  .store-card { grid-template-columns: 84px minmax(0, 1fr) auto; gap: 12px; padding: 16px; }
+  .store-icon { width: 84px; height: 44px; }
+  .checklist-question { grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 15px; }
+  .checklist-form > .form-section { padding: 16px; }
+  .checklist-form > .submit-button { width: 100%; }
 }

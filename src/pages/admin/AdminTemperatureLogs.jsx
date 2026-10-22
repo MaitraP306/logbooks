@@ -112,6 +112,7 @@ function AdminTemperatureLogs() {
       }
     }
 
+    missing.sort((a, b) => b.log_date.localeCompare(a.log_date) || getStoreName(a.store_id).localeCompare(getStoreName(b.store_id)) || (getTask(a.task_type_id)?.time_period || '').localeCompare(getTask(b.task_type_id)?.time_period || ''))
     setMissingLogs(missing)
     setLoading(false)
   }
@@ -160,6 +161,27 @@ function AdminTemperatureLogs() {
 
       {error && <div className="error-box">{error}</div>}
 
+      <div className="admin-log-list">
+        {logs.map(log => {
+          const task = getTask(log.task_type_id)
+          return (
+            <div className="admin-log-card" key={log.id}>
+              <div>
+                <strong>{getStoreName(log.store_id)}</strong>
+                <span>{formatDate(log.log_date)}</span>
+                <span>{task?.time_period || 'Temperature'}</span>
+                <small>Completed by: {log.submitted_by_name || 'Unknown'}</small>
+              </div>
+              <Link to={`/admin/temperature/${log.id}`} className="action-button">Edit Log</Link>
+            </div>
+          )
+        })}
+
+        {logs.length === 0 && missingLogs.length === 0 && (
+          <div className="empty-state">No temperature logs found. Select your filters and search.</div>
+        )}
+      </div>
+
       {missingLogs.length > 0 && (
         <section className="admin-section" style={{ marginTop: 16 }}>
           <div className="admin-section-header">
@@ -194,27 +216,6 @@ function AdminTemperatureLogs() {
           </div>
         </section>
       )}
-
-      <div className="admin-log-list">
-        {logs.map(log => {
-          const task = getTask(log.task_type_id)
-          return (
-            <div className="admin-log-card" key={log.id}>
-              <div>
-                <strong>{getStoreName(log.store_id)}</strong>
-                <span>{formatDate(log.log_date)}</span>
-                <span>{task?.time_period || 'Temperature'}</span>
-                <small>Completed by: {log.submitted_by_name || 'Unknown'}</small>
-              </div>
-              <Link to={`/admin/temperature/${log.id}`} className="action-button">Edit Log</Link>
-            </div>
-          )
-        })}
-
-        {logs.length === 0 && missingLogs.length === 0 && (
-          <div className="empty-state">No temperature logs found. Select your filters and search.</div>
-        )}
-      </div>
     </div>
   )
 }

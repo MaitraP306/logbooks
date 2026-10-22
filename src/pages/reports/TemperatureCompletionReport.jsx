@@ -295,6 +295,12 @@ function TemperatureCompletionReport() {
     }
 
 
+    // Display the newest dates first; keep stores alphabetically ordered within each date.
+    dateRows.sort((a, b) =>
+      b.date.localeCompare(a.date) ||
+      a.storeName.localeCompare(b.storeName)
+    )
+
     setRows(dateRows)
     setLoading(false)
   }
@@ -508,7 +514,7 @@ function TemperatureCompletionReport() {
                     {selectedStore ===
                       'all' && (
 
-                      <small>
+                      <small className="report-store-name">
                         {row.storeName}
                       </small>
 
